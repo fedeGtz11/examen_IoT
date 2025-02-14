@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'home.dart'; // Importar Home
-import 'viaje.dart'; // Importar Viaje
-import 'summary.dart'; // Importar Summary
-import 'viaje_recibido.dart'; // Importar ViajeRecibido
+import 'home.dart';
+import 'viaje.dart';
+import 'summary.dart';
+import 'viaje_recibido.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,15 +16,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  int _selectedIndex = 0; // Índice de la pantalla actual
+  int _selectedIndex = 0;
 
-  // Controladores para los inputs de la pantalla "Viaje"
   final TextEditingController origenController = TextEditingController();
   final TextEditingController destinoController = TextEditingController();
   final TextEditingController pasajerosController = TextEditingController();
   String? errorMensaje;
 
-  // Función para cambiar la pantalla dentro del mismo Scaffold
   void _changePage(int index) {
     setState(() {
       _selectedIndex = index;
@@ -33,7 +31,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    // Lista de pantallas sin Scaffold, solo el contenido
     final List<Widget> pages = [
       Home(changePage: _changePage),
       Viaje(
@@ -52,8 +49,14 @@ class _MyAppState extends State<MyApp> {
         changePage: _changePage,
         origen: origenController.text,
         destino: destinoController.text,
+        numPasajeros: pasajerosController.text,
       ),
-      ViajeRecibido(changePage: _changePage),
+      ViajeRecibido(
+        changePage: _changePage,
+        origen: origenController.text,
+        destino: destinoController.text,
+        numPasajeros: pasajerosController.text,
+      ),
     ];
 
     return MaterialApp(
@@ -61,7 +64,7 @@ class _MyAppState extends State<MyApp> {
       title: 'CarPoolin App',
       home: Scaffold(
         backgroundColor: Colors.white,
-        body: pages[_selectedIndex], // Muestra solo la pantalla actual
+        body: pages[_selectedIndex],
       ),
     );
   }

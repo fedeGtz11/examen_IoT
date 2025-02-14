@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Viaje extends StatelessWidget {
+class Viaje extends StatefulWidget {
   final Function(int) changePage;
   final TextEditingController origenController;
   final TextEditingController destinoController;
@@ -18,16 +18,23 @@ class Viaje extends StatelessWidget {
     required this.setError,
   });
 
+  @override
+  State<Viaje> createState() => _ViajeState();
+}
+
+class _ViajeState extends State<Viaje> {
+  String selectedDate = "Hoy";
+
   void _validarYAvanzar() {
-    int? numPasajeros = int.tryParse(pasajerosController.text);
+    int? numPasajeros = int.tryParse(widget.pasajerosController.text);
 
     if (numPasajeros == null || numPasajeros < 1) {
-      setError('Debes ingresar al menos 1 pasajero.');
+      widget.setError('Debes ingresar al menos 1 pasajero.');
     } else if (numPasajeros > 6) {
-      setError('No pueden ser más de 6 pasajeros.');
+      widget.setError('No pueden ser más de 6 pasajeros.');
     } else {
-      setError(null);
-      changePage(2); // Navegar a Summary
+      widget.setError(null);
+      widget.changePage(2);
     }
   }
 
@@ -38,29 +45,72 @@ class Viaje extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => widget.changePage(0),
+          ),
           TextField(
-              controller: origenController,
+              controller: widget.origenController,
               decoration: const InputDecoration(labelText: 'Origen')),
           TextField(
-              controller: destinoController,
+              controller: widget.destinoController,
               decoration: const InputDecoration(labelText: 'Destino')),
           const SizedBox(height: 20),
+          const Text('Fecha',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ChoiceChip(
+                label: const Text('Hoy'),
+                selected: selectedDate == "Hoy",
+                onSelected: (selected) {
+                  setState(() {
+                    selectedDate = "Hoy";
+                  });
+                },
+              ),
+              ChoiceChip(
+                label: const Text('Mañana'),
+                selected: selectedDate == "Mañana",
+                onSelected: (selected) {
+                  setState(() {
+                    selectedDate = "Mañana";
+                  });
+                },
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
           TextField(
-              controller: pasajerosController,
+              controller: widget.pasajerosController,
               keyboardType: TextInputType.number,
               decoration:
                   const InputDecoration(labelText: 'Número de pasajeros')),
-          if (errorMensaje != null)
+          if (widget.errorMensaje != null)
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
-              child: Text(errorMensaje!,
+              child: Text(widget.errorMensaje!,
                   style: const TextStyle(color: Colors.red, fontSize: 14)),
             ),
           const SizedBox(height: 20),
           Center(
-              child: ElevatedButton(
-                  onPressed: _validarYAvanzar,
-                  child: const Text('Buscar viaje'))),
+            child: ElevatedButton(
+              onPressed: _validarYAvanzar,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blueGrey,
+                foregroundColor: Colors.white,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                textStyle:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: const Text('Buscar Viaje'),
+            ),
+          ),
         ],
       ),
     );

@@ -32,6 +32,8 @@ class Home extends StatelessWidget {
             child: FloatingActionButton(
               onPressed: () => changePage(1),
               tooltip: 'Siguiente',
+              backgroundColor: Colors.blueGrey,
+              foregroundColor: Colors.white,
               child: const Icon(Icons.arrow_forward),
             ),
           ),
